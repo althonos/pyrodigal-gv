@@ -1,4 +1,4 @@
-"""A Pyrodigal extension for giant viruses and viruses with alternative genetic code. 
+"""A Pyrodigal extension for giant viruses and viruses with alternative genetic code.
 """
 
 __version__ = "0.1.0"
@@ -27,7 +27,7 @@ with resource_files(__package__).joinpath("meta.json").open("r") as f:
     METAGENOMIC_BINS_VIRAL = METAGENOMIC_BINS[-12:]
 
 
-# Convenience subclass to run Pyrodigal in metagenomic mode using the 
+# Convenience subclass to run Pyrodigal in metagenomic mode using the
 # metagenomic models from `prodigal-gv` instead of stock `prodigal`.
 class ViralGeneFinder(pyrodigal.OrfFinder):
     """A gene finder for viruses.
@@ -37,7 +37,7 @@ class ViralGeneFinder(pyrodigal.OrfFinder):
         self,
         training_info: typing.Optional[pyrodigal.TrainingInfo] = None,
         *,
-        meta: bool = True,
+        meta: bool = False,
         metagenomic_bins: typing.Optional[pyrodigal.MetagenomicBins]=None,
         closed: bool = False,
         mask: bool = False,
@@ -48,7 +48,7 @@ class ViralGeneFinder(pyrodigal.OrfFinder):
         viral_only: bool = False,
     ):
         """Create a new viral gene finder.
-        
+
         Arguments:
             training_info (`~pyrodigal.TrainingInfo`, optional): A training
                 info instance to use in single mode without having to
@@ -60,6 +60,10 @@ class ViralGeneFinder(pyrodigal.OrfFinder):
             viral_only (`bool`): Set to `True` to only run on viral models
                 when running the gene finder. Ignored when the gene finder
                 is not in *meta* mode. Defaults to `False`.
+            metagenomic_bins (`~pyrodigal.MetagenomicBins`, optional): The
+                metagenomic bins to use while in *meta* mode. When `None`
+                is given, use all models from ``prodigal-gv``, unless
+                ``viral_only`` is set to `True`.
             closed (`bool`): Set to `True` to consider sequences ends
                 *closed*, which prevents proteins from running off edges.
                 Defaults to `False`.
