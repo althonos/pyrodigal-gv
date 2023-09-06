@@ -29,7 +29,7 @@ with resource_files(__package__).joinpath("meta.json").open("r") as f:
 
 # Convenience subclass to run Pyrodigal in metagenomic mode using the
 # metagenomic models from `prodigal-gv` instead of stock `prodigal`.
-class ViralGeneFinder(pyrodigal.OrfFinder):
+class ViralGeneFinder(pyrodigal.GeneFinder):
     """A gene finder for viruses.
     """
 

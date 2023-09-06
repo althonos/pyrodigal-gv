@@ -1,6 +1,6 @@
 # 🔥🦠 Pyrodigal-gv [![Stars](https://img.shields.io/github/stars/althonos/pyrodigal-gv.svg?style=social&maxAge=3600&label=Star)](https://github.com/althonos/pyrodigal-gv/stargazers)
 
-*A [Pyrodigal](https://github.com/althonos/pyrodigal) extension to predict genes in giant viruses and viruses with alternative genetic code. *
+*A [Pyrodigal](https://github.com/althonos/pyrodigal) extension to predict genes in giant viruses and viruses with alternative genetic code.*
 
 [![Actions](https://img.shields.io/github/actions/workflow/status/althonos/pyrodigal-gv/test.yml?branch=main&logo=github&style=flat-square&maxAge=300)](https://github.com/althonos/pyrodigal-gv/actions)
 [![Coverage](https://img.shields.io/codecov/c/gh/althonos/pyrodigal-gv?style=flat-square&maxAge=3600&logo=codecov)](https://codecov.io/gh/althonos/pyrodigal-gv/)
@@ -19,9 +19,9 @@
 
 ## 🗺️ Overview
 
-`pyrodigal` is a Python module that provides [Cython](https://cython.org/) bindings
-to [Prodigal](https://github.com/hyattpd/Prodigal/), an efficient gene finding 
-method for genomes and metagenomes based on dynamic programming.
+[Pyrodigal](https://github.com/althonos/pyrodigal) is a Python module that provides 
+[Cython](https://cython.org/) bindings to [Prodigal](https://github.com/hyattpd/Prodigal/), 
+an efficient gene finding method for genomes and metagenomes based on dynamic programming.
 
 `pyrodigal-gv` is a small extension module for `pyrodigal` which distributes
 additional metagenomic models for giant viruses and viruses that use
