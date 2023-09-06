@@ -1,0 +1,3 @@
+[submodule "vendor/prodigal-gv"]
+	path = vendor/prodigal-gv
+	url = https://github.com/apcamargo/prodigal-gv
