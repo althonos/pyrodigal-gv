@@ -1,7 +1,7 @@
 """A Pyrodigal extension for improved prediction of viral genes.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.0-alpha1"
 __author__ = "Martin Larralde <martin.larralde@embl.de>"
 __license__ = "GPLv3"
 
@@ -24,7 +24,7 @@ class ViralGeneFinder(pyrodigal.GeneFinder):
         training_info: typing.Optional[pyrodigal.TrainingInfo] = None,
         *,
         meta: bool = False,
-        metagenomic_bins: typing.Optional[pyrodigal.MetagenomicBins]=None,
+        metagenomic_bins: typing.Optional[pyrodigal.MetagenomicBins] = None,
         closed: bool = False,
         mask: bool = False,
         min_gene: int = 90,

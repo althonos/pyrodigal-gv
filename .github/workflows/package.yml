@@ -3,7 +3,7 @@ name: Package
 on:
   push:
     tags:
-      - v*
+    - v*
 
 jobs:
 
@@ -11,39 +11,110 @@ jobs:
     name: Build Linux wheels (x86-64)
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
-        python-tag:
-        - cp36-manylinux_x86_64
-        - cp37-manylinux_x86_64
-        - cp38-manylinux_x86_64
-        - cp39-manylinux_x86_64
-        - cp310-manylinux_x86_64
-        - cp311-manylinux_x86_64
-        - pp37-manylinux_x86_64
-        - pp38-manylinux_x86_64
-        - pp39-manylinux_x86_64
+        include:
+        - python-version: 3.6
+          python-release: v3.6
+          python-impl: CPython
+        - python-version: 3.7
+          python-release: v3.7
+          python-impl: CPython
+        - python-version: 3.8
+          python-release: v3.8
+          python-impl: CPython
+        - python-version: 3.9
+          python-release: v3.9
+          python-impl: CPython
+        - python-version: '3.10'
+          python-release: v3.10
+          python-impl: CPython
+        - python-version: '3.11'
+          python-release: v3.11
+          python-impl: CPython
+        - python-version: pypy-3.7
+          python-release: v3.7
+          python-impl: PyPy
+        - python-version: pypy-3.8
+          python-release: v3.8
+          python-impl: PyPy
+        - python-version: pypy-3.9
+          python-release: v3.9
+          python-impl: PyPy
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
       with:
         submodules: true
-    - uses: actions-rs/toolchain@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        toolchain: stable
-        override: true
-    - name: Build manylinux wheels
-      uses: pypa/cibuildwheel@v2.11.3
-      env:
-        CIBW_BUILD: ${{ matrix.python-tag }}
-        CIBW_BEFORE_BUILD: pip install --pre wheel packaging pyrodigal
-        CIBW_BUILD_VERBOSITY: 2
-        CIBW_TEST_COMMAND: python -m unittest pyrodigal_gv.tests -vv
-        CIBW_TEST_REQUIRES: importlib-resources
-      with:
-        output-dir: dist
+        python-version: ${{ matrix.python-version }}
+    - name: Install build dependencies
+      run: python -m pip install -U -r .github/workflows/requirements.txt
+    - name: Install Pyrodigal
+      run: python -m pip install --pre pyrodigal
+    - name: Build wheel
+      run: python setup.py bdist_wheel
     - uses: actions/upload-artifact@v3
       with:
         name: wheels
         path: dist/*
+
+  test-wheel:
+    name: Test wheel distribution
+    runs-on: ubuntu-20.04
+    needs:
+    - wheel
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - python-version: 3.6
+          python-release: v3.6
+          python-impl: CPython
+        - python-version: 3.7
+          python-release: v3.7
+          python-impl: CPython
+        - python-version: 3.8
+          python-release: v3.8
+          python-impl: CPython
+        - python-version: 3.9
+          python-release: v3.9
+          python-impl: CPython
+        - python-version: '3.10'
+          python-release: v3.10
+          python-impl: CPython
+        - python-version: '3.11'
+          python-release: v3.11
+          python-impl: CPython
+        - python-version: pypy-3.7
+          python-release: v3.7
+          python-impl: PyPy
+        - python-version: pypy-3.8
+          python-release: v3.8
+          python-impl: PyPy
+        - python-version: pypy-3.9
+          python-release: v3.9
+          python-impl: PyPy
+    steps:
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Download built wheels
+      uses: actions/download-artifact@v2
+      with:
+          name: wheels
+          path: dist/
+    - name: Update pip to latest version
+      run: python -m pip install -U pip setuptools wheel
+    - name: Install Pyrodigal pre-release
+      run: python -m pip install --pre pyrodigal
+    - name: Install built wheel
+      run: python -m pip install --only-binary pyrodigal-gv --find-links=dist pyrodigal-gv
+    - name: Run tests
+      run: python -m unittest pyrodigal_gv.tests -vv
 
   sdist:
     runs-on: ubuntu-latest
@@ -57,7 +128,7 @@ jobs:
       with:
         python-version: 3.11
     - name: Install build requirements
-      run: python -m pip install -r .github/workflows/requirements.txt
+      run: python -m pip install -U -r .github/workflows/requirements.txt
     - name: Build source distribution
       run: python setup.py sdist
     - name: Store built source distribution
@@ -98,6 +169,7 @@ jobs:
     - sdist
     - test-sdist
     - wheel
+    - test-wheel
     steps:
     - uses: actions/download-artifact@v2
       with:
@@ -124,40 +196,40 @@ jobs:
       with:
         github-token: '${{ secrets.GITHUB_TOKEN }}'
 
-  aur:
-    environment: Arch Linux User Repository
-    runs-on: ubuntu-latest
-    if: "!contains(github.ref, 'rc')"
-    name: Update AUR package
-    needs:
-    - sdist
-    - upload
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: true
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: Download built wheels
-      uses: actions/download-artifact@v2
-      with:
-          name: wheels
-          path: dist
-    - name: Extract package version
-      run: echo PKGVER=$(python setup.py --version) >> $GITHUB_ENV
-    - name: Compute SHA256 of source distribution
-      run: echo SHA256=$(sha256sum dist/pyrodigal-gv-${{ env.PKGVER }}.tar.gz | cut -f1 -d' ') >> $GITHUB_ENV
-    - name: Generate PKGBUILD
-      run: sed -e "s/%pkgver/${{ env.PKGVER }}/g" -e "s/%sha256sum/${{ env.SHA256 }}/g" pkg/aur/PKGBUILD.in > pkg/aur/PKGBUILD
-    - name: Update package
-      uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
-      with:
-        pkgname: python-pyrodigal-gv
-        pkgbuild: pkg/aur/PKGBUILD
-        commit_username: ${{ secrets.AUR_USER }}
-        commit_email: ${{ secrets.AUR_EMAIL }}
-        ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-        commit_message: ${{ github.event.head_commit.message }}
-        ssh_keyscan_types: rsa,dsa,ecdsa,ed25519
+  # aur:
+  #   environment: Arch Linux User Repository
+  #   runs-on: ubuntu-latest
+  #   if: "!contains(github.ref, 'rc')"
+  #   name: Update AUR package
+  #   needs:
+  #   - sdist
+  #   - upload
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       submodules: true
+  #   - name: Set up Python 3.10
+  #     uses: actions/setup-python@v4
+  #     with:
+  #       python-version: '3.10'
+  #   - name: Download built wheels
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #         name: wheels
+  #         path: dist
+  #   - name: Extract package version
+  #     run: echo PKGVER=$(python setup.py --version) >> $GITHUB_ENV
+  #   - name: Compute SHA256 of source distribution
+  #     run: echo SHA256=$(sha256sum dist/pyrodigal-gv-${{ env.PKGVER }}.tar.gz | cut -f1 -d' ') >> $GITHUB_ENV
+  #   - name: Generate PKGBUILD
+  #     run: sed -e "s/%pkgver/${{ env.PKGVER }}/g" -e "s/%sha256sum/${{ env.SHA256 }}/g" pkg/aur/PKGBUILD.in > pkg/aur/PKGBUILD
+  #   - name: Update package
+  #     uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
+  #     with:
+  #       pkgname: python-pyrodigal-gv
+  #       pkgbuild: pkg/aur/PKGBUILD
+  #       commit_username: ${{ secrets.AUR_USER }}
+  #       commit_email: ${{ secrets.AUR_EMAIL }}
+  #       ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+  #       commit_message: ${{ github.event.head_commit.message }}
+  #       ssh_keyscan_types: rsa,dsa,ecdsa,ed25519

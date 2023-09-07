@@ -1,0 +1,7 @@
+include COPYING
+include CHANGELOG.md
+include CONTRIBUTING.md
+include README.md
+include CITATION.cff
+include pyproject.toml
+include pyrodigal_gv/meta.json

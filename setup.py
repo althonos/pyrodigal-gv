@@ -1,3 +1,4 @@
+import configparser
 import json
 import os
 import sys
@@ -8,9 +9,12 @@ import setuptools
 import packaging.tags
 from setuptools import Command
 from setuptools.command.sdist import sdist as _sdist
-from setuptools.command.build import build as _build
 from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 
+try:
+    from setuptools.command.build import build as _build
+except ImportError:
+    from distutils.command.build import build as _build
 
 try:
     import pycparser
@@ -183,6 +187,7 @@ class bdist_wheel(_bdist_wheel):
 
 setuptools.setup(
     cmdclass={
+        "sdist": sdist,
         "build": build,
         "generate_json": generate_json,
         "bdist_wheel": bdist_wheel,
