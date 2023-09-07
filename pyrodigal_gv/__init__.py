@@ -1,4 +1,4 @@
-"""A Pyrodigal extension for giant viruses and viruses with alternative genetic code.
+"""A Pyrodigal extension for improved prediction of viral genes.
 """
 
 __version__ = "0.1.0"
@@ -14,6 +14,8 @@ try:
 except ImportError:
     from importlib_resources import files as resource_files
 
+# Expose the wrapped `prodigal-gv` version
+PRODIGAL_GV_VERSION = "v2.11.0"
 
 # Parse training info from `prodigal-gv`
 with resource_files(__package__).joinpath("meta.json").open("r") as f:
@@ -30,7 +32,7 @@ with resource_files(__package__).joinpath("meta.json").open("r") as f:
 # Convenience subclass to run Pyrodigal in metagenomic mode using the
 # metagenomic models from `prodigal-gv` instead of stock `prodigal`.
 class ViralGeneFinder(pyrodigal.GeneFinder):
-    """A gene finder for viruses.
+    """A gene finder with additional viral metagenomic models.
     """
 
     def __init__(
