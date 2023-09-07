@@ -6,28 +6,12 @@ __author__ = "Martin Larralde <martin.larralde@embl.de>"
 __license__ = "GPLv3"
 
 import typing
-import json
 import pyrodigal
 
-try:
-    from importlib.resources import files as resource_files
-except ImportError:
-    from importlib_resources import files as resource_files
+from .meta import METAGENOMIC_BINS, METAGENOMIC_BINS_VIRAL
 
 # Expose the wrapped `prodigal-gv` version
 PRODIGAL_GV_VERSION = "v2.11.0"
-
-# Parse training info from `prodigal-gv`
-with resource_files(__package__).joinpath("meta.json").open("r") as f:
-    METAGENOMIC_BINS = pyrodigal.MetagenomicBins([
-        pyrodigal.MetagenomicBin(
-            description=b["description"],
-            training_info=pyrodigal.TrainingInfo(**b["training_info"]),
-        )
-        for b in json.load(f)
-    ])
-    METAGENOMIC_BINS_VIRAL = METAGENOMIC_BINS[-12:]
-
 
 # Convenience subclass to run Pyrodigal in metagenomic mode using the
 # metagenomic models from `prodigal-gv` instead of stock `prodigal`.
