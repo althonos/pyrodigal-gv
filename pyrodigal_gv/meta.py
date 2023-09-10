@@ -16,4 +16,5 @@ with resource_files(__package__).joinpath("meta.json").open("r") as f:
         )
         for b in json.load(f)
     ])
-    METAGENOMIC_BINS_VIRAL = METAGENOMIC_BINS[-12:]
+    METAGENOMIC_BINS_VIRAL = pyrodigal.MetagenomicBins(
+        [b for b in METAGENOMIC_BINS if b.description.split("|")[2] == "V"])
