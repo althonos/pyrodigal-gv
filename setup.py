@@ -167,7 +167,8 @@ class build(_build):
                 print("training_info=pyrodigal.TrainingInfo(**{})".format(json.dumps(entry["training_info"])), file=dst)
                 print("),", file=dst)
             print("))", file=dst)
-            print("METAGENOMIC_BINS_VIRAL = METAGENOMIC_BINS[-12:]", file=dst)
+            print("METAGENOMIC_BINS_VIRAL = pyrodigal.MetagenomicBins(", file=dst)
+            print("[b for b in METAGENOMIC_BINS if b.description.split('|')[2] == 'V'])", file=dst)
             dst.flush()
             py_compile.compile(dst.name, bytecode_file)
 
