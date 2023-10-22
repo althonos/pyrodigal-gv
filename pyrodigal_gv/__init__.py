@@ -27,6 +27,7 @@ class ViralGeneFinder(pyrodigal.GeneFinder):
         metagenomic_bins: typing.Optional[pyrodigal.MetagenomicBins] = None,
         closed: bool = False,
         mask: bool = False,
+        min_mask: int = 50,
         min_gene: int = 90,
         min_edge_gene: int = 60,
         max_overlap: int = 60,
@@ -55,6 +56,10 @@ class ViralGeneFinder(pyrodigal.GeneFinder):
                 Defaults to `False`.
             mask (`bool`): Prevent genes from running across regions
                 containing unknown nucleotides. Defaults to `False`.
+            min_mask (`int`): The minimum mask length, when region masking
+                is enabled. Regions shorter than the given length will not
+                be masked, which may be helpful to prevent masking of 
+                single unknown nucleotides.
             min_gene (`int`): The minimum gene length. Defaults to the value
                 used in Prodigal.
             min_edge_gene (`int`): The minimum edge gene length. Defaults to
@@ -78,6 +83,7 @@ class ViralGeneFinder(pyrodigal.GeneFinder):
             metagenomic_bins=metagenomic_bins,
             closed=closed,
             mask=mask,
+            min_mask=min_mask,
             min_gene=min_gene,
             min_edge_gene=min_edge_gene,
             max_overlap=max_overlap,
