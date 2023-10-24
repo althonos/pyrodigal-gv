@@ -6,7 +6,7 @@ import py_compile
 import tempfile
 
 import setuptools
-import packaging.tags
+#import packaging.tags
 from setuptools import Command
 from setuptools.command.sdist import sdist as _sdist
 from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
