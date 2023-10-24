@@ -146,42 +146,42 @@ class generate_json(Command):
             json.dump(data, dst)
 
 
-class build(_build):
+# class build(_build):
 
-    def run(self):
-        json_file = os.path.join("pyrodigal_gv", "meta.json")
-        python_file = os.path.join(self.build_lib, "pyrodigal_gv", "meta.py")
-        bytecode_file = os.path.join(self.build_lib, "pyrodigal_gv", "meta.pyc")
+#     def run(self):
+#         json_file = os.path.join("pyrodigal_gv", "meta.json")
+#         python_file = os.path.join(self.build_lib, "pyrodigal_gv", "meta.py")
+#         bytecode_file = os.path.join(self.build_lib, "pyrodigal_gv", "meta.pyc")
 
-        with open(os.path.join("pyrodigal_gv", "meta.json")) as f:
-            data = json.load(f)
+#         with open(os.path.join("pyrodigal_gv", "meta.json")) as f:
+#             data = json.load(f)
 
-        output_file = os.path.join(self.build_lib, "pyrodigal_gv", "meta.tmp")
-        self.mkpath(os.path.dirname(output_file))
-        with tempfile.NamedTemporaryFile(mode="r+", dir=self.build_lib, suffix=".py") as dst:
-            print("import pyrodigal", file=dst)
-            print("METAGENOMIC_BINS = pyrodigal.MetagenomicBins((", file=dst)
-            for entry in data:
-                print("pyrodigal.MetagenomicBin(", file=dst)
-                print("description={!r},".format(entry["description"]), file=dst)
-                print("training_info=pyrodigal.TrainingInfo(**{})".format(json.dumps(entry["training_info"])), file=dst)
-                print("),", file=dst)
-            print("))", file=dst)
-            print("METAGENOMIC_BINS_VIRAL = pyrodigal.MetagenomicBins(", file=dst)
-            print("[b for b in METAGENOMIC_BINS if b.description.split('|')[2] == 'V'])", file=dst)
-            dst.flush()
-            py_compile.compile(dst.name, bytecode_file)
+#         output_file = os.path.join(self.build_lib, "pyrodigal_gv", "meta.tmp")
+#         self.mkpath(os.path.dirname(output_file))
+#         with tempfile.NamedTemporaryFile(mode="r+", dir=self.build_lib, suffix=".py") as dst:
+#             print("import pyrodigal", file=dst)
+#             print("METAGENOMIC_BINS = pyrodigal.MetagenomicBins((", file=dst)
+#             for entry in data:
+#                 print("pyrodigal.MetagenomicBin(", file=dst)
+#                 print("description={!r},".format(entry["description"]), file=dst)
+#                 print("training_info=pyrodigal.TrainingInfo(**{})".format(json.dumps(entry["training_info"])), file=dst)
+#                 print("),", file=dst)
+#             print("))", file=dst)
+#             print("METAGENOMIC_BINS_VIRAL = pyrodigal.MetagenomicBins(", file=dst)
+#             print("[b for b in METAGENOMIC_BINS if b.description.split('|')[2] == 'V'])", file=dst)
+#             dst.flush()
+#             py_compile.compile(dst.name, bytecode_file)
 
-        _build.run(self)
-        if os.path.exists(python_file):
-            os.remove(python_file)
+#         _build.run(self)
+#         if os.path.exists(python_file):
+#             os.remove(python_file)
 
 
-class bdist_wheel(_bdist_wheel):
+# class bdist_wheel(_bdist_wheel):
     
-    def initialize_options(self):
-        _bdist_wheel.initialize_options(self)
-        self.python_tag = "{}{}".format(packaging.tags.interpreter_name(), packaging.tags.interpreter_version())
+#     def initialize_options(self):
+#         _bdist_wheel.initialize_options(self)
+#         self.python_tag = "{}{}".format(packaging.tags.interpreter_name(), packaging.tags.interpreter_version())
 
 
 # --- Setup ---------------------------------------------------------------------
@@ -189,8 +189,8 @@ class bdist_wheel(_bdist_wheel):
 setuptools.setup(
     cmdclass={
         "sdist": sdist,
-        "build": build,
         "generate_json": generate_json,
-        "bdist_wheel": bdist_wheel,
+        # "build": build,
+        # "bdist_wheel": bdist_wheel,
     }
 )
