@@ -77,7 +77,7 @@ class generate_json(Command):
         for block in self._extract_initializers():
             literals = parser.parse(block).ext[0].body.block_items[0].init.exprs
             gc, trans_table, st_wt, bias, type_wt, uses_sd, rbs_wt, ups_comp, mot_wt, no_mot, gene_dc = literals
-            yield {
+            model = {
                 "gc": self._literal(gc),
                 "translation_table": int(trans_table.value),
                 "start_weight": self._literal(st_wt),
@@ -89,13 +89,18 @@ class generate_json(Command):
                     [ self._literal(y) for y in x.exprs ] 
                     for x in ups_comp.exprs
                 ],
-                "motif_weights": [
-                    [ [ self._literal(z) for z in y.exprs] for y in x.exprs ]
-                    for x in mot_wt.exprs
-                ],
                 "missing_motif_weight": self._literal(no_mot),
                 "coding_statistics": [ self._literal(x) for x in gene_dc.exprs ]
             }
+            # avoid recording all-zero motif weights if the model organism
+            # uses Shine/Dalgarno motif.
+            if not uses_sd.value:
+                model["motif_weights"] = [
+                    [ [ self._literal(z) for z in y.exprs] for y in x.exprs ]
+                    for x in mot_wt.exprs
+                ]
+            yield model
+
 
     def _extract_descriptions(self):
         with open(self.metagenomic, "rb") as src:
