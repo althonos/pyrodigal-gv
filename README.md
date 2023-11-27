@@ -74,6 +74,17 @@ for i, pred in enumerate(orf_finder.find_genes(bytes(record.seq))):
 `ViralGeneFinder` has an additional keyword argument, `viral_only`, which can
 be set to `True` to run gene calling using only viral models.
 
+## 🔨 Command line
+
+`pyrodigal-gv` comes with a very simple command line similar to Prodigal and `pyrodigal`:
+```console
+$ pyrodigal-gv -i <input_file.fasta> -a <gene_translations.fasta> -d <gene_sequences.fasta>
+```
+
+*Contrary to `prodigal` and `pyrodigal`, the `pyrodigal-gv` script runs in **meta** mode
+by default! Running in **single** mode can be done with `pyrodigal-gv -p single` but 
+the results will be exactly the same as `pyrodigal`, so why would you ever do this ⁉️*
+
 
 ## 🔖 Citation
 
