@@ -5,7 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-[Unreleased]: https://github.com/althonos/pyrodigal-gv/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/althonos/pyrodigal-gv/compare/v0.3.1...HEAD
+
+
+## [v0.3.1] - 2023-11-27
+[v0.3.1]: https://github.com/althonos/pyrodigal-gv/compare/v0.3.0...v0.3.1
+
+### Fixed
+- Inconsistent behaviour introduced by 868bd18ad121ad59489f76da031c0cebc29ff53a ([apcamargo/genomad#56](https://github.com/apcamargo/genomad/issues/56)).
 
 
 ## [v0.3.0] - 2023-11-27
