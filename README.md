@@ -88,6 +88,10 @@ the results will be exactly the same as `pyrodigal`, so why would you ever do th
 
 ## 🔖 Citation
 
+If you use the features provided by `pyrodigal-gv` beyond the base Pyrodigal functionality, please cite the original manuscript detailing these extensions:
+
+> Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., ... and Kyrpides, N. C. (2023). [Identification of mobile genetic elements with geNomad](https://doi.org/10.1038/s41587-023-01953-y). Nature Biotechnology, *1-10*.
+
 Pyrodigal is scientific software, with a
 [published paper](https://doi.org/10.21105/joss.04296)
 in the [Journal of Open-Source Software](https://joss.theoj.org/). Please
