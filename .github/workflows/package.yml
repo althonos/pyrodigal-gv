@@ -121,6 +121,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags')
 
   release:
+    permissions: write-all
     environment: GitHub Releases
     runs-on: ubuntu-latest
     if: "!contains(github.ref, 'rc')"
