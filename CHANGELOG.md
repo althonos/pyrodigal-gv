@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-[Unreleased]: https://github.com/althonos/pyrodigal-gv/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/althonos/pyrodigal-gv/compare/v0.3.2...HEAD
+
+
+## [v0.3.2] - 2024-08-15
+[v0.3.2]: https://github.com/althonos/pyrodigal-gv/compare/v0.3.1...v0.3.2
+
+### Added
+- `stdin` and `formatter_class` flags to `pyrodigal_gv.cli.main` as introduced in latest Pyrodigal version.
+
+### Changed
+- Update `pyrodigal` dependency to `v3.5.1`.
 
 
 ## [v0.3.1] - 2023-11-27
@@ -25,7 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Avoid storing all-zero motif weights in `meta.json` file.
 
 ### Changed
-- `pyrodigal` dependency version to `v3.2.1`.
+- Update `pyrodigal` dependency version to `v3.2.1`.
 
 
 
